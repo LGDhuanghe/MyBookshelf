@@ -153,13 +153,13 @@ public class CheckSourceService extends Service {
     private PendingIntent getActivityPendingIntent() {
         Intent intent = new Intent(this, BookSourceActivity.class);
         intent.setAction(CheckSourceService.ActionOpenActivity);
-        return PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
     }
 
     private PendingIntent getThisServicePendingIntent() {
         Intent intent = new Intent(this, this.getClass());
         intent.setAction(ActionDoneService);
-        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
     }
 
     public void startCheck() {

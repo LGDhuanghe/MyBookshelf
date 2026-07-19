@@ -2,7 +2,6 @@
 
 package com.kunfei.bookshelf.utils
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.PendingIntent
 import android.app.PendingIntent.*
@@ -38,7 +37,6 @@ inline fun <reified T : Service> Context.stopService() {
     stopService(Intent(this, T::class.java))
 }
 
-@SuppressLint("UnspecifiedImmutableFlag")
 inline fun <reified T : Service> Context.servicePendingIntent(
     action: String,
     configIntent: Intent.() -> Unit = {}
@@ -46,10 +44,9 @@ inline fun <reified T : Service> Context.servicePendingIntent(
     val intent = Intent(this, T::class.java)
     intent.action = action
     configIntent.invoke(intent)
-    return getService(this, 0, intent, FLAG_UPDATE_CURRENT)
+    return getService(this, 0, intent, FLAG_UPDATE_CURRENT or FLAG_IMMUTABLE)
 }
 
-@SuppressLint("UnspecifiedImmutableFlag")
 inline fun <reified T : Activity> Context.activityPendingIntent(
     action: String,
     configIntent: Intent.() -> Unit = {}
@@ -57,10 +54,9 @@ inline fun <reified T : Activity> Context.activityPendingIntent(
     val intent = Intent(this, T::class.java)
     intent.action = action
     configIntent.invoke(intent)
-    return getActivity(this, 0, intent, FLAG_UPDATE_CURRENT)
+    return getActivity(this, 0, intent, FLAG_UPDATE_CURRENT or FLAG_IMMUTABLE)
 }
 
-@SuppressLint("UnspecifiedImmutableFlag")
 inline fun <reified T : BroadcastReceiver> Context.broadcastPendingIntent(
     action: String,
     configIntent: Intent.() -> Unit = {}
@@ -68,7 +64,7 @@ inline fun <reified T : BroadcastReceiver> Context.broadcastPendingIntent(
     val intent = Intent(this, T::class.java)
     intent.action = action
     configIntent.invoke(intent)
-    return getBroadcast(this, 0, intent, FLAG_CANCEL_CURRENT)
+    return getBroadcast(this, 0, intent, FLAG_CANCEL_CURRENT or FLAG_IMMUTABLE)
 }
 
 val Context.defaultSharedPreferences: SharedPreferences
