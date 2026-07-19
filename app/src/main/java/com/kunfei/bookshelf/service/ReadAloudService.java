@@ -416,22 +416,13 @@ public class ReadAloudService extends Service implements Player.Listener {
             RxBus.get().post(RxBusTag.ALOUD_STATE, Status.PLAY);
             updateNotification();
             initSpeechRate();
+            String utteranceId = "content_" + nowSpeak;
             HashMap<String, String> map = new HashMap<>();
-            map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "content");
-            for (int i = nowSpeak; i < contentList.size(); i++) {
-                if (i == 0) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        textToSpeech.speak(contentList.get(i), TextToSpeech.QUEUE_FLUSH, null, "content");
-                    } else {
-                        textToSpeech.speak(contentList.get(i), TextToSpeech.QUEUE_FLUSH, map);
-                    }
-                } else {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        textToSpeech.speak(contentList.get(i), TextToSpeech.QUEUE_ADD, null, "content");
-                    } else {
-                        textToSpeech.speak(contentList.get(i), TextToSpeech.QUEUE_ADD, map);
-                    }
-                }
+            map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, utteranceId);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                textToSpeech.speak(contentList.get(nowSpeak), TextToSpeech.QUEUE_FLUSH, null, utteranceId);
+            } else {
+                textToSpeech.speak(contentList.get(nowSpeak), TextToSpeech.QUEUE_FLUSH, map);
             }
         }
     }
@@ -742,8 +733,11 @@ public class ReadAloudService extends Service implements Player.Listener {
         public void onDone(String s) {
             readAloudNumber = readAloudNumber + contentList.get(nowSpeak).length() + 1;
             nowSpeak = nowSpeak + 1;
+            speak = false;
             if (nowSpeak >= contentList.size()) {
                 RxBus.get().post(RxBusTag.ALOUD_STATE, Status.NEXT);
+            } else if (!pause) {
+                playTTSN();
             }
         }
 
