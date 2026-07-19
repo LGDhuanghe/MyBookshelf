@@ -122,7 +122,7 @@ public class WebService extends Service {
     private PendingIntent getThisServicePendingIntent() {
         Intent intent = new Intent(this, this.getClass());
         intent.setAction(ActionDoneService);
-        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
     }
 
     private int getPort() {

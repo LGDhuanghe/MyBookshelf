@@ -535,13 +535,13 @@ public class ReadAloudService extends Service implements Player.Listener {
     private PendingIntent getReadBookActivityPendingIntent() {
         Intent intent = new Intent(this, ReadBookActivity.class);
         intent.setAction(ReadAloudService.ActionReadActivity);
-        return PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
     }
 
     private PendingIntent getThisServicePendingIntent(String actionStr) {
         Intent intent = new Intent(this, this.getClass());
         intent.setAction(actionStr);
-        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
     }
 
     /**
@@ -665,8 +665,9 @@ public class ReadAloudService extends Service implements Player.Listener {
         ComponentName mComponent = new ComponentName(getPackageName(), MediaButtonIntentReceiver.class.getName());
         Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
         mediaButtonIntent.setComponent(mComponent);
+        // 媒体按键事件由系统回填 KeyEvent，Android 12 上必须可变
         PendingIntent mediaButtonReceiverPendingIntent = PendingIntent.getBroadcast(this, 0,
-                mediaButtonIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                mediaButtonIntent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_MUTABLE);
 
         mediaSessionCompat = new MediaSessionCompat(this, TAG, mComponent, mediaButtonReceiverPendingIntent);
         mediaSessionCompat.setCallback(new MediaSessionCompat.Callback() {

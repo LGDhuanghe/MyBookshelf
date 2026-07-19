@@ -271,7 +271,7 @@ public class DownloadService extends Service {
     private PendingIntent getChancelPendingIntent() {
         Intent intent = new Intent(this, DownloadService.class);
         intent.setAction(DownloadService.cancelAction);
-        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
     }
 
     private synchronized void isProgress(DownloadChapterBean downloadChapterBean) {
@@ -286,7 +286,7 @@ public class DownloadService extends Service {
         currentTime = System.currentTimeMillis();
 
         Intent mainIntent = new Intent(this, DownloadActivity.class);
-        PendingIntent mainPendingIntent = PendingIntent.getActivity(this, 0, mainIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent mainPendingIntent = PendingIntent.getActivity(this, 0, mainIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         //创建 Notification.Builder 对象
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, MApplication.channelIdDownload)
                 .setSmallIcon(R.drawable.ic_download)
